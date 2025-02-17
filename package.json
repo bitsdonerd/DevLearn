@@ -4,19 +4,24 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run services:up && next dev",
-    "services:up": "docker compose -f root/infra/compose.yaml up -d",
-    "services:stop": "docker compose -f root/infra/compose.yaml stop",
-    "services:down": "docker compose -f root/infra/compose.yaml down",
+    "services:up": "docker compose -f infra/compose.yaml up -d",
+    "services:stop": "docker compose -f infra/compose.yaml stop",
+    "services:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "migration:create": "node-pg-migrate -m infra/migrations create",
+    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
+    "migration:down": "node-pg-migrate -m infra/migrations down"
   },
   "author": "bitsdonerd",
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.4",
     "next": "^15.1.0",
+    "node-pg-migrate": "^6.2.2",
     "pg": "^8.13.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

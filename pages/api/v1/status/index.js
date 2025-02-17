@@ -1,4 +1,4 @@
-import database from "root/infra/database";
+import database from "infra/database";
 
 async function status(request, response) {
   // Data - toISOString
