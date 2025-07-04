@@ -19,7 +19,7 @@ async function status(request, response) {
   // "SELECT count(*) FROM pg_stat_activity;" - to get the number of open connections
   const usedConnection = await database.query({
     text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
-    values: [databaseName]
+    values: [databaseName],
   });
   const databaseOpenedConnections = usedConnection.rows[0].count;
   console.log("Opened connections:", databaseOpenedConnections);
@@ -34,7 +34,6 @@ async function status(request, response) {
         opened_connections: databaseOpenedConnections,
       },
     },
-
   });
 }
 
