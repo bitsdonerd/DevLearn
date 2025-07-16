@@ -17,5 +17,3 @@ process.stdout.write(
   "\n\n 🔴 Waiting for PostgreSQL connections to be ready \n\n",
 );
 checkPostgres();
-
-

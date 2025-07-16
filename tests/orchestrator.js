@@ -14,7 +14,6 @@ async function waitForAllServices() {
       if (response.status !== 200) {
         throw Error(`HTTP error: ${response.status}`);
       }
-
     }
   }
 }
