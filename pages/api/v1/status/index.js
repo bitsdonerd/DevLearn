@@ -1,40 +1,47 @@
 import database from "infra/database";
+import { InternalServerError } from "infra/errors";
 
 async function status(request, response) {
-  // Data - toISOString
-  const updatedAt = new Date().toISOString();
+  try {
+    const updatedAt = new Date().toISOString();
 
-  // Postgres version
-  const result = await database.query("SHOW server_version;");
-  const postgresVersion = result.rows[0].server_version;
-  console.log("Postgres version:", postgresVersion);
+    const databaseVersionResult = await database.query("SHOW server_version;");
+    const databaseVersionValue = databaseVersionResult.rows[0].server_version;
 
-  // Postgres max conections
-  const connection = await database.query("SHOW max_connections;");
-  const postgresConnection = connection.rows[0].max_connections;
-  console.log("Max connections:", postgresConnection);
+    const databaseMaxConnectionsResult = await database.query(
+      "SHOW max_connections;",
+    );
+    const databaseMaxConnectionsValue =
+      databaseMaxConnectionsResult.rows[0].max_connections;
 
-  // Postgres open connections
-  const databaseName = process.env.POSTGRES_DB;
-  // "SELECT count(*) FROM pg_stat_activity;" - to get the number of open connections
-  const usedConnection = await database.query({
-    text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
-    values: [databaseName],
-  });
-  const databaseOpenedConnections = usedConnection.rows[0].count;
-  console.log("Opened connections:", databaseOpenedConnections);
+    const databaseName = process.env.POSTGRES_DB;
+    const databaseOpenedConnectionsResult = await database.query({
+      text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
+      values: [databaseName],
+    });
+    const databaseOpenedConnectionsValue =
+      databaseOpenedConnectionsResult.rows[0].count;
 
-  // API Rest - updated_at (snake_case)
-  response.status(200).json({
-    updated_at: updatedAt,
-    dependencies: {
-      database: {
-        version: postgresVersion,
-        max_connections: parseInt(postgresConnection),
-        opened_connections: databaseOpenedConnections,
+    response.status(200).json({
+      updated_at: updatedAt,
+      dependencies: {
+        database: {
+          version: databaseVersionValue,
+          max_connections: parseInt(databaseMaxConnectionsValue),
+          opened_connections: databaseOpenedConnectionsValue,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    const publicErrorObject = new InternalServerError({
+      cause: error,
+    });
+
+    console.log("\n Erro dentro do catch do controller:");
+    console.error(publicErrorObject);
+
+    response.status(500).json(publicErrorObject);
+  }
 }
 
 export default status;
