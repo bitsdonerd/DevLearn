@@ -11,7 +11,7 @@ async function status(request, response) {
     const databaseMaxConnectionsResult = await database.query(
       "SHOW max_connections;",
     );
-    const databaseMaxConnectionsValue =
+    const postgresConnection =
       databaseMaxConnectionsResult.rows[0].max_connections;
 
     const databaseName = process.env.POSTGRES_DB;
@@ -19,7 +19,7 @@ async function status(request, response) {
       text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
       values: [databaseName],
     });
-    const databaseOpenedConnectionsValue =
+    const databaseOpenedConnections =
       databaseOpenedConnectionsResult.rows[0].count;
 
     response.status(200).json({
@@ -27,8 +27,8 @@ async function status(request, response) {
       dependencies: {
         database: {
           version: databaseVersionValue,
-          max_connections: parseInt(databaseMaxConnectionsValue),
-          opened_connections: databaseOpenedConnectionsValue,
+          max_connections: parseInt(postgresConnection),
+          opened_connections: databaseOpenedConnections,
         },
       },
     });
@@ -36,7 +36,6 @@ async function status(request, response) {
     const publicErrorObject = new InternalServerError({
       cause: error,
     });
-
     console.log("\n Erro dentro do catch do controller:");
     console.error(publicErrorObject);
 
