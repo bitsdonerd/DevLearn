@@ -38,7 +38,8 @@ export class ForbiddenError extends Error {
   constructor() {
     super("You do not have permission to access this action.");
     this.name = "ForbiddenError";
-    this.action = "Provide a valid authentication token with the required permissions.";
+    this.action =
+      "Provide a valid authentication token with the required permissions.";
     this.statusCode = 403;
   }
   toJSON() {
