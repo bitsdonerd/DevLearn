@@ -7,6 +7,30 @@ beforeAll(async () => {
 
 describe("POST /api/v1/migrations", () => {
   describe("Anonymous user", () => {
+    test("Should not allow running migrations", async () => {
+      const response = await fetch("http://localhost:3000/api/v1/migrations", {
+        method: "POST",
+        headers: {
+          "X-Test-Auth": "fail",
+        },
+      });
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "You do not have permission to access this action.",
+        action: "Provide a valid authentication token with the required permissions.",
+        status_code: 403,
+      });
+    });
+  });
+});
+
+describe("POST /api/v1/migrations", () => {
+  describe("Authorized user", () => {
     describe("Retrieving pending migrations", () => {
       test("For the first time", async () => {
         const response1 = await fetch(

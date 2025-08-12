@@ -33,3 +33,20 @@ export class MethodNotAllowedError extends Error {
     };
   }
 }
+
+export class ForbiddenError extends Error {
+  constructor() {
+    super("You do not have permission to access this action.");
+    this.name = "ForbiddenError";
+    this.action = "Provide a valid authentication token with the required permissions.";
+    this.statusCode = 403;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
