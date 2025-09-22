@@ -3,7 +3,6 @@ import controller from "infra/controller";
 
 const router = createRouter();
 
-
 router.post(postMigrationsHandler);
 
 export default router.handler(controller.errorHandlers);

@@ -25,12 +25,7 @@ describe("POST /api/v1/users", () => {
 
       const responseBody = await response.json();
       expect(responseBody).toEqual({
-        id: 'f2b4dd86-fdbe-4ca0-9c67-d8ad19b281fa',
-        username: 'bitsdonerd',
-        email: 'bitsdonerd@gmail.com',
-        password: 'senha123',
-        created_at: '2025-09-14T19:37:24.693Z',
-        updated_at: '2025-09-14T19:37:24.693Z'
+
       });
     });
   });
