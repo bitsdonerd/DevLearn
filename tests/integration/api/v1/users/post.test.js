@@ -1,5 +1,5 @@
+import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator.js";
-import database from "infra/database.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -10,28 +10,39 @@ beforeAll(async () => {
 describe("POST /api/v1/users", () => {
   describe("Anonymous user", () => {
     test("With unique and valid data", async () => {
-      await database.query({
-        text: "INSERT INTO users (username, email, password) VALUES ($1, $2, $3);",
-        values: ["bitsdonerd", "bitsdonerd@gmail.com", "senha123"],
-      });
-
-      const users = await database.query("SELECT * FROM users;");
-      console.log(users.rows);
 
       const response = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
+        // Especifique que o corpo da requisição(tipo dos dados) é JSON
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Metodo para converter um objeto JavaScript em uma string JSON
+        body: JSON.stringify({
+          username: "bitsdonerd",
+          email: "bitsdonerd@gmail.com",
+          password: "senha123",
+        })
       });
+
+      // Verifica os usuarios no banco apos a criacao
       expect(response.status).toBe(201);
 
       const responseBody = await response.json();
+
       expect(responseBody).toEqual({
-        id: 'f2b4dd86-fdbe-4ca0-9c67-d8ad19b281fa',
+        id: responseBody.id,
         username: 'bitsdonerd',
         email: 'bitsdonerd@gmail.com',
         password: 'senha123',
-        created_at: '2025-09-14T19:37:24.693Z',
-        updated_at: '2025-09-14T19:37:24.693Z'
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at, // tunelamento da resposta para ser ela mesma 
       });
+
+      expect(uuidVersion(responseBody.id)).toBe(4); // Verifica se o ID é um UUID v4
+      expect(Date.parse(responseBody.created_at)).not.toBeNaN(); // Verifica se created_at é uma data válida
+      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
     });
   });
 });
