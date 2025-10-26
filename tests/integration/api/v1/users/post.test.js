@@ -42,5 +42,49 @@ describe("POST /api/v1/users", () => {
       expect(Date.parse(responseBody.created_at)).not.toBeNaN(); // Verifica se created_at é uma data válida
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
     });
+
+    test("With duplicated email", async () => {
+      const response1 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "emailduplicado1",
+          email: "duplicado@curso.dev",
+          password: "senha123",
+        })
+      });
+
+      expect(response1.status).toBe(201);
+
+    });
+
+    test("With duplicated email", async () => {
+      const response2 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "emailduplicado2",
+          email: "Duplicado@curso.dev",
+          password: "senha123",
+        })
+      });
+
+      expect(response2.status).toBe(400);
+
+      const response2Body = await response2.json();
+
+      expect(response2Body).toEqual({
+        name: "ValidationError",
+        message: "Email already in use",
+        action: "Please change the email and try again",
+        status_code: 400,
+      })
+
+
+    });
   });
 });
