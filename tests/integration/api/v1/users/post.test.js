@@ -53,14 +53,11 @@ describe("POST /api/v1/users", () => {
           username: "emailduplicado1",
           email: "duplicado@curso.dev",
           password: "senha123",
-        })
+        }),
       });
 
       expect(response1.status).toBe(201);
 
-    });
-
-    test("With duplicated email", async () => {
       const response2 = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
@@ -70,7 +67,7 @@ describe("POST /api/v1/users", () => {
           username: "emailduplicado2",
           email: "Duplicado@curso.dev",
           password: "senha123",
-        })
+        }),
       });
 
       expect(response2.status).toBe(400);
@@ -82,9 +79,46 @@ describe("POST /api/v1/users", () => {
         message: "Email already in use",
         action: "Please change the email and try again",
         status_code: 400,
-      })
+      });
+    });
 
+    test("With duplicated username", async () => {
+      const response1 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "usernameduplicado",
+          email: "usernameduplicado1@curso.dev",
+          password: "senha123",
+        }),
+      });
 
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "UsernameDuplicado",
+          email: "UsernameDuplicado2@curso.dev",
+          password: "senha123",
+        }),
+      });
+
+      expect(response2.status).toBe(400);
+
+      const response2Body = await response2.json();
+
+      expect(response2Body).toEqual({
+        name: "ValidationError",
+        message: "Username already in use",
+        action: "Please change the username and try again",
+        status_code: 400,
+      });
     });
   });
 });
