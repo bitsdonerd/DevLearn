@@ -24,7 +24,9 @@ describe("GET /api/v1/users/[username]", () => {
 
       expect(response1.status).toBe(201);
 
-      const response2 = await fetch("http://localhost:3000/api/v1/users/CamelCaseUser");
+      const response2 = await fetch(
+        "http://localhost:3000/api/v1/users/CamelCaseUser",
+      );
 
       expect(response2.status).toBe(200);
 
@@ -42,7 +44,6 @@ describe("GET /api/v1/users/[username]", () => {
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-
     });
 
     test("With case missmatch", async () => {
@@ -60,7 +61,9 @@ describe("GET /api/v1/users/[username]", () => {
 
       expect(response1.status).toBe(201);
 
-      const response2 = await fetch("http://localhost:3000/api/v1/users/differentcaseuser");
+      const response2 = await fetch(
+        "http://localhost:3000/api/v1/users/differentcaseuser",
+      );
 
       expect(response2.status).toBe(200);
 
@@ -78,11 +81,12 @@ describe("GET /api/v1/users/[username]", () => {
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-
     });
 
     test("With nonexistent username", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users/NonExistentUser");
+      const response = await fetch(
+        "http://localhost:3000/api/v1/users/NonExistentUser",
+      );
 
       expect(response.status).toBe(404);
 
@@ -94,7 +98,6 @@ describe("GET /api/v1/users/[username]", () => {
         action: "Please check the username and try again",
         status_code: 404,
       });
-
     });
   });
 });

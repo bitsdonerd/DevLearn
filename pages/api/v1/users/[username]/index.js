@@ -9,7 +9,7 @@ router.get(getMigrationsHandler);
 export default router.handler(controller.errorHandlers);
 
 async function getMigrationsHandler(request, response) {
-  // api/v1/users/[username] 
+  // api/v1/users/[username]
   const username = request.query.username;
   const userFound = await user.findOneByUsername(username);
 

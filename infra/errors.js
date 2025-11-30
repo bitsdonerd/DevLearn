@@ -88,7 +88,9 @@ export class ValidationError extends Error {
 
 export class NotFoundError extends Error {
   constructor({ cause, message, action }) {
-    super(message || "This feature could not be found in the system.", { cause });
+    super(message || "This feature could not be found in the system.", {
+      cause,
+    });
     this.name = "NotFoundError";
     this.action = action || "Please check the data and try again.";
     this.statusCode = 404;
