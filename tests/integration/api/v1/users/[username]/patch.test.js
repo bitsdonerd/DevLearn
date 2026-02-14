@@ -284,12 +284,13 @@ describe("PATCH /api/v1/users/[username]", () => {
         "newPassword2",
         userInDatabase.password,
       );
-      expect(correctPassowordMatch).toBe(true);
 
       const incorrectPassowordMatch = await password.compare(
         "newPassword1",
         userInDatabase.password,
       );
+
+      expect(correctPassowordMatch).toBe(true);
       expect(incorrectPassowordMatch).toBe(false);
     });
   });
