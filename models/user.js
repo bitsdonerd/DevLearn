@@ -68,7 +68,6 @@ async function update(username, userInputValues) {
 
   if ("username" in userInputValues) {
     await validateUniqueUsername(userInputValues.username);
-
   }
 
   if ("email" in userInputValues) {
@@ -102,11 +101,10 @@ async function update(username, userInputValues) {
         userWithNewValues.username,
         userWithNewValues.email,
         userWithNewValues.password,
-      ]
-    })
+      ],
+    });
 
     return results.rows[0];
-
   }
 }
 
@@ -161,6 +159,6 @@ const user = {
   create,
   findOneByUsername,
   update,
-}
+};
 
 export default user;
