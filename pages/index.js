@@ -1,0 +1,5 @@
+function Home() {
+  return <h1>Página em construção, aguarde!</h1>;
+}
+
+export default Home;
