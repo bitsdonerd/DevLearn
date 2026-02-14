@@ -4,14 +4,24 @@ import user from "models/user.js";
 
 const router = createRouter();
 
-router.get(getMigrationsHandler);
+router.get(getHandler);
+router.patch(patchHandler);
 
-export default router.handler(controller.errorHandlers);
-
-async function getMigrationsHandler(request, response) {
+async function getHandler(request, response) {
   // api/v1/users/[username]
   const username = request.query.username;
   const userFound = await user.findOneByUsername(username);
 
   return response.status(200).json(userFound);
 }
+
+async function patchHandler(request, response) {
+  // api/v1/users/[username]
+  const username = request.query.username;
+  const userInputValues = request.body;
+
+  const updatedUser = await user.update(username, userInputValues);
+  return response.status(200).json(updatedUser);
+}
+
+export default router.handler(controller.errorHandlers);
