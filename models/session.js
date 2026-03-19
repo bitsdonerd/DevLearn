@@ -47,7 +47,7 @@ async function findOneValidByToken(sessionToken) {
       throw new UnauthorizedError({
         message: "User session not found or has expired.",
         action: "Please log in again to obtain a valid session.",
-      })
+      });
     }
 
     return results.rows[0];
@@ -72,12 +72,11 @@ async function renew(sessionId) {
           RETURNING *;
             `,
       values: [sessionId, expiresAt],
-    })
+    });
 
     return results.rows[0];
   }
 }
-
 
 const session = {
   create,
@@ -86,4 +85,4 @@ const session = {
   renew,
 };
 
-export default session
+export default session;

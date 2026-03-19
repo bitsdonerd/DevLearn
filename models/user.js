@@ -205,7 +205,7 @@ async function findOneById(userId) {
       throw new NotFoundError({
         message: "The ID informed does not match any user in our database",
         action: "Please check the ID and try again",
-      })
+      });
     }
 
     return results.rows[0];
