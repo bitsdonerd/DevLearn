@@ -20,9 +20,13 @@ function onErrorHandler(error, request, response) {
     error instanceof MethodNotAllowedError ||
     error instanceof ForbiddenError ||
     error instanceof ValidationError ||
-    error instanceof NotFoundError ||
-    error instanceof UnauthorizedError
+    error instanceof NotFoundError
   ) {
+    return response.status(error.statusCode).json(error);
+  }
+
+  if (error instanceof UnauthorizedError) {
+    clearSessionCookie(response);
     return response.status(error.statusCode).json(error);
   }
 
